@@ -10,10 +10,7 @@ This is a good starting point for your next project that needs firebase auth
 
 # Setup
 
-- Clone the project with 
-```
-git clone https://github.com/IgorBayerl/react-vite-tailwind-firebase-auth-template.git
-```
+- Clone the project 
 - Navigate to the directory
 ```
 cd react-vite-tailwind-firebase-auth-template
