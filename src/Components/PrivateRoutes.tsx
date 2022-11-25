@@ -1,6 +1,7 @@
+import { lazy } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import DashNavbar from './DashNavbar'
+const DashNavbar = lazy(() => import('./DashNavbar'))
 
 export default function PrivateRoutes() {
   const { currentUser } = useAuth()
