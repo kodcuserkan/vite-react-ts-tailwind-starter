@@ -1,15 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content:["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
-      backgroundColor: () => ({
-        'brand-color': "#5d3ebc",
-      })
+      colors: () => ({
+        'brand-color': '#4c3398',
+        'primary-brand-color': '#5d3ebc',
+        'secondary-brand-color': '#7849f7',
+      }),
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('tailwind-scrollbar')
-  ],
+  plugins: [require('@tailwindcss/forms'), require('tailwind-scrollbar')],
 }

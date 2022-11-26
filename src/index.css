@@ -5,8 +5,19 @@
 @tailwind utilities;
 
 @layer base {
-  html, body {
+  html,
+  body {
     font-family: 'Open Sans', sans-serif;
     @apply antialiased;
   }
-};
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.custom-flags button {
+  @apply h-[56px] w-[109px] hover:border-primary-brand-color bg-white border-2 border-gray-400 transition-all;
+}

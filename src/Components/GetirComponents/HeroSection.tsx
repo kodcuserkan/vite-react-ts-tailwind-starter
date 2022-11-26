@@ -1,47 +1,38 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import ReactFlagsSelect from 'react-flags-select'
 import { Transition } from '@headlessui/react'
+import { HERO_SLIDES } from './constants'
 
 type Props = {}
 
 const HeroSection = (props: Props) => {
-  const [step, setStep] = useState([
-    { href: '', selected: true },
-    { href: '', selected: false },
-    { href: '', selected: false },
-    { href: '', selected: false },
-  ])
+  const [step, setStep] = useState(HERO_SLIDES)
+  const [wrapperWidth, setWrapperWidth] = useState(1)
+  const [selected, setSelected] = useState('TR')
+
+  const wrapper = useRef(null)
 
   const nextStep = useCallback(() => {
     setStep((prev) => {
-      const newStep = structuredClone(prev);
+      const newSteps = structuredClone(prev)
       const index = prev.findIndex((item) => item.selected)
-      console.log(step, index)
 
-      if(index === prev.length - 1) {
-        newStep[0].selected = true
-        newStep[1].selected = false
-        newStep[2].selected = false
-        newStep[3].selected = false
+      if (index === prev.length - 1) {
+        newSteps[0].selected = true
+        newSteps[1].selected = false
+        newSteps[2].selected = false
+        newSteps[3].selected = false
       } else {
-        newStep.forEach((item, i) => {
-          if(i === index + 1) {
+        newSteps.forEach((item, i) => {
+          if (i === index + 1) {
             item.selected = true
           } else {
             item.selected = false
           }
         })
       }
-      return newStep
+      return newSteps
     })
-  }, [step])
-
-  const wrapper = useRef(null)
-  const [wrapperWidth, setWrapperWidth] = useState(1)
-
-  useEffect(() => {
-    setInterval(() => {
-      nextStep()
-    }, 1000)
   }, [])
 
   useEffect(() => {
@@ -56,119 +47,93 @@ const HeroSection = (props: Props) => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      nextStep()
+    }, 5000)
+
+    return () => clearInterval(timer)
+  }, [])
+
   return (
-    <div className="h-[500px] bg-white flex">
+    <div className="relative h-[500px] bg-white flex before:bg-gradient-to-r before:from-primary-brand-color before:to-transparent before:absolute before:inset-0 before:w-full before:h-full before:z-10 ">
       <div
         className="flex items-start overflow-hidden w-96 sm:w-full"
         ref={wrapper}
       >
         <div className="flex flex-nowrap ">
-          <Transition
-            appear={false}
-            unmount={false}
-            show={step[0].selected}
-            enter="transform transition ease-in-out duration-500"
-            enterFrom={`translate-x-96 opacity-0`}
-            enterTo={`translate-x-0 opacity-100`}
-            leave="transform transition ease-in-out duration-500 "
-            leaveFrom={`translate-x-0 opacity-100`}
-            leaveTo={`-translate-x-full opacity-0`}
-            className="w-0 bg-green-200 overflow-visible"
-            as="div"
-          >
-            <div
-              className="bg-green-200"
-              style={{ width: `${wrapperWidth}px` }}
-            >
-              <h2>stuff</h2>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-            </div>
-          </Transition>
+          {step?.length &&
+            step.map((s, i) => (
+              <Transition
+                show={s.selected}
+                appear={false}
+                unmount={false}
+                enter="transform transition ease-in-out duration-500"
+                enterFrom="translate-x-96 opacity-0"
+                enterTo="translate-x-0 opacity-100"
+                leave="transform transition ease-in-out duration-500 "
+                leaveFrom="translate-x-0 opacity-100"
+                leaveTo="-translate-x-96 opacity-0"
+                className="bg-blue-200 w-0 overflow-visible"
+                as="div"
+                key={s.href}
+              >
+                <div style={{ width: `${wrapperWidth}px` }}>
+                  <img
+                    className="object-cover h-[500px] w-full"
+                    src={s.href}
+                    alt={`Hero image ${i}`}
+                  />
+                </div>
+              </Transition>
+            ))}
+        </div>
+      </div>
 
-          <Transition
-            appear={false}
-            unmount={false}
-            show={step[1].selected}
-            enter="transform transition ease-in-out duration-500"
-            enterFrom={`translate-x-96 opacity-0`}
-            enterTo={`translate-x-0 opacity-100`}
-            leave="transform transition ease-in-out duration-500 "
-            leaveFrom={`translate-x-0 opacity-100`}
-            leaveTo={`-translate-x-96 opacity-0`}
-            className="bg-red-200 w-0 overflow-visible"
-            as="div"
-          >
-            <div style={{ width: `${wrapperWidth}px` }}>
-              <h2>stuff 2</h2>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-            </div>
-          </Transition>
-
-          <Transition
-            appear={false}
-            unmount={false}
-            show={step[2].selected}
-            enter="transform transition ease-in-out duration-500"
-            enterFrom={`translate-x-96 opacity-0`}
-            enterTo={`translate-x-0 opacity-100`}
-            leave="transform transition ease-in-out duration-500 "
-            leaveFrom={`translate-x-0 opacity-100`}
-            leaveTo={`-translate-x-96 opacity-0`}
-            className="w-0 overflow-visible"
-            as="div"
-          >
-            <div style={{ width: `${wrapperWidth}px` }}>
-              <h2>stuff 3</h2>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-            </div>
-          </Transition>
-
-          <Transition
-            appear={false}
-            unmount={false}
-            show={step[3].selected}
-            enter="transform transition ease-in-out duration-500"
-            enterFrom={`translate-x-96 opacity-0`}
-            enterTo={`translate-x-0 opacity-100`}
-            leave="transform transition ease-in-out duration-500 "
-            leaveFrom={`translate-x-0 opacity-100`}
-            leaveTo={`-translate-x-96 opacity-0`}
-            className="bg-blue-200 w-0 overflow-visible"
-            as="div"
-          >
-            <div style={{ width: `${wrapperWidth}px` }}>
-              <h2>stuff 4</h2>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-              <p>blar blar blar</p>
-            </div>
-          </Transition>
+      <div className="absolute container flex justify-between items-center top-0 left-1/2 -translate-x-1/2 h-full z-20">
+        <div className="flex flex-col gap-y-10">
+          <img
+            className="h-44 w-44"
+            src="../images/getir-bir-mutluluk.svg"
+            alt="getir-logo"
+          />
+          <h3 className="font-semibold text-white text-4xl">
+            Dakikalar içinde kapınızda
+          </h3>
+        </div>
+        <div className="flex flex-col gap-4 bg-gray-50 p-6 rounded-lg w-[400px]">
+          <h4 className="text-primary-brand-color text-center font-semibold w-full">
+            Giriş yap veya kayıt ol
+          </h4>
+          <div className='flex gap-2' >
+            <ReactFlagsSelect
+              selected={selected}
+              onSelect={(code) => setSelected(code)}
+              countries={['TR', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'NL']}
+              customLabels={{
+                TR: '+90',
+                US: '+1',
+                GB: '+44',
+                DE: '+49',
+                FR: '+33',
+                IT: '+39',
+                ES: '+34',
+                NL: '+31',
+              }}
+              className="custom-flags rounded"
+            />
+            <input
+              className="rounded border-gray-400 border-2 w-full h-[54px] bg-white pl-4 hover:border-primary-brand-color focus:border-primary-brand-color active:border-primary-brand-color focus-visible:border-primary-brand-color focus:outline-none transition-all"
+              placeholder="Telefon numarası"
+              type="tel"
+              id="phone"
+              name="phone"
+            />
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default HeroSection
+export default memo(HeroSection)
