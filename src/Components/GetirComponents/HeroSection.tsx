@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import ReactFlagsSelect from 'react-flags-select'
 import { Transition } from '@headlessui/react'
-import { HERO_SLIDES } from './constants'
+import { HERO_SLIDES } from './api/hero'
 
 type Props = {}
 
@@ -55,6 +55,8 @@ const HeroSection = (props: Props) => {
     return () => clearInterval(timer)
   }, [])
 
+  // validate phone regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im
+
   return (
     <div className="relative h-[500px] bg-white flex before:bg-gradient-to-r before:from-primary-brand-color before:to-transparent before:absolute before:inset-0 before:w-full before:h-full before:z-10 ">
       <div
@@ -105,7 +107,7 @@ const HeroSection = (props: Props) => {
           <h4 className="text-primary-brand-color text-center font-semibold w-full">
             Giriş yap veya kayıt ol
           </h4>
-          <div className='flex gap-2' >
+          <div className="flex gap-2 group">
             <ReactFlagsSelect
               selected={selected}
               onSelect={(code) => setSelected(code)}
@@ -122,14 +124,23 @@ const HeroSection = (props: Props) => {
               }}
               className="custom-flags rounded"
             />
-            <input
-              className="rounded border-gray-400 border-2 w-full h-[54px] bg-white pl-4 hover:border-primary-brand-color focus:border-primary-brand-color active:border-primary-brand-color focus-visible:border-primary-brand-color focus:outline-none transition-all"
-              placeholder="Telefon numarası"
-              type="tel"
-              id="phone"
-              name="phone"
-            />
+
+            <label className="flex-1 block relative">
+              <input
+                className="rounded pt-5 text-sm border-gray-400 border-2 w-full h-[54px] group-hover:border group-active:border group-fıc group-hover:border-primary-brand-color hover:border-primary-brand-color  active:border-primary-brand-color focus-visible:border-primary-brand-color outline-none transition-colors peer"
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+              />
+              <span className="absolute top-0 left-3 h-[53px] w-full flex items-center text-gray-500 peer-focus:h-7 peer-focus:text-primary-brand-color peer-focus:text-sm transition-all  peer-valid:text-primary-brand-color peer-valid:text-sm peer-valid:h-7">
+                Telefon numarası
+              </span>
+            </label>
           </div>
+          <button className="w-full rounded-md bg-brand-color-yellow text-brand-color hover:text-brand-color-yellow hover:bg-brand-color transition-all p-4">
+            Telefon numarası ile devam et
+          </button>
         </div>
       </div>
     </div>
